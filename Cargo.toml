@@ -1,5 +1,5 @@
 [package]
-name = "aoc-day-one"
+name = "aoc2021"
 version = "0.1.0"
 authors = ["Hueseyin Yildiz <huess@juicyarts.de>"]
 edition = "2018"
