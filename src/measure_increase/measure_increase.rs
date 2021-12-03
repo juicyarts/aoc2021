@@ -2,10 +2,8 @@ pub fn measure_increase(input: &[i32]) -> i32 {
   let output = input.iter().enumerate();
   output.fold(0, |accum, (index, item)| {
     if index == 0 {
-      return accum;
-    }
-
-    if &input[index - 1] < item {
+      accum
+    } else if &input[index - 1] < item {
       accum + 1
     } else {
       accum
