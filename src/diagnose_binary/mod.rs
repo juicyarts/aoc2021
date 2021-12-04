@@ -1,0 +1,1 @@
+pub mod diagnose_binary;
