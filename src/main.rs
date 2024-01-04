@@ -1,8 +1,12 @@
-mod diagnose_binary;
-mod dive;
-mod measure_increase;
-mod giant_squid;
+#[macro_use]
+extern crate dotenv_codegen;
 
-fn main() {
-    println!("Hello, world!");
+mod day1;
+mod day2;
+mod day3;
+mod day4;
+mod utils;
+
+pub fn main() {
+    println!("Hello World")
 }
