@@ -1,6 +1,3 @@
-#[macro_use]
-extern crate dotenv_codegen;
-
 mod day1;
 mod day2;
 mod day3;

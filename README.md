@@ -1,4 +1,4 @@
-# AOC2021 with Rust
+# Advent of Code 2021
 
-Using spare time to get into rust by solving AOC2021 tasks.
-See: https://adventofcode.com/
+Advent of code 2021 with Rust. All challenges can be found [here](https://adventofcode.com/2021).
+The actual resuts for the challenges live in a .env file on root level.
