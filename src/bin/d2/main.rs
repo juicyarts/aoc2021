@@ -1,4 +1,16 @@
+extern crate aoc2021;
 use crate::utils::read_lines::read_lines;
+use aoc2021::utils;
+use std::env;
+
+fn main() {
+    let args: Vec<String> = env::args().collect();
+    let src = &args[1];
+    let one = d2_p1(src);
+    let two = d2_p2(src);
+    println!("{}", one);
+    println!("{}", two);
+}
 
 fn parse_input(source: &str) -> Vec<(String, i32)> {
     let mut output: Vec<(String, i32)> = Vec::new();
@@ -16,7 +28,7 @@ fn parse_input(source: &str) -> Vec<(String, i32)> {
 }
 
 #[allow(dead_code)]
-pub fn day2_p1(source: &str) -> i32 {
+pub fn d2_p1(source: &str) -> i32 {
     let output = parse_input(source);
 
     let (pz, px) = output.iter().fold(
@@ -32,21 +44,21 @@ pub fn day2_p1(source: &str) -> i32 {
 }
 
 #[test]
-fn day2_p1_example() {
-    assert_eq!(day2_p1(&"./src/day2/input_example.txt"), 150);
+fn d2_p1_example() {
+    assert_eq!(d2_p1(&"./src/bin/d2/e.txt"), 150);
 }
 
 #[test]
-fn day2_p1_test() {
+fn d2_p1_test() {
     dotenv::dotenv().ok();
     assert_eq!(
-        day2_p1(&"./src/day2/input.txt"),
+        d2_p1(&"./src/bin/d2/i.txt"),
         dotenv::var("d2_p1").unwrap().parse::<i32>().unwrap()
     );
 }
 
 #[allow(dead_code)]
-pub fn day2_p2(source: &str) -> i32 {
+pub fn d2_p2(source: &str) -> i32 {
     let output = parse_input(source);
 
     let (pz, px, _aim) =
@@ -63,15 +75,15 @@ pub fn day2_p2(source: &str) -> i32 {
 }
 
 #[test]
-fn day2_p2_example() {
-    assert_eq!(day2_p2(&"./src/day2/input_example.txt"), 900);
+fn d2_p2_example() {
+    assert_eq!(d2_p2(&"./src/bin/d2/e.txt"), 900);
 }
 
 #[test]
-fn day2_p2_test() {
+fn d2_p2_test() {
     dotenv::dotenv().ok();
     assert_eq!(
-        day2_p2(&"./src/day2/input.txt"),
+        d2_p2(&"./src/bin/d2/i.txt"),
         dotenv::var("d2_p2").unwrap().parse::<i32>().unwrap()
     );
 }

@@ -1,6 +1,18 @@
+extern crate aoc2021;
 use crate::utils::read_lines::read_file;
+use aoc2021::utils;
 use std::collections::HashSet;
+use std::env;
 use std::{collections::HashMap, usize};
+
+fn main() {
+    let args: Vec<String> = env::args().collect();
+    let src = &args[1];
+    let one = d4_p1(src);
+    let two = d4_p2(src);
+    println!("{}", one);
+    println!("{}", two);
+}
 
 trait Score {
     fn apply_move(&mut self, m: i32);
@@ -77,7 +89,7 @@ fn parse_input(source: &str) -> (Game, Vec<Board>) {
 }
 
 #[allow(dead_code)]
-pub fn day4_p1(source: &str) -> i32 {
+pub fn d4_p1(source: &str) -> i32 {
     let (game, mut boards) = parse_input(source);
 
     let result = game.moves.iter().find_map(|m| {
@@ -95,20 +107,20 @@ pub fn day4_p1(source: &str) -> i32 {
 }
 
 #[test]
-fn day4_p1_example() {
-    assert_eq!(day4_p1(&"./src/day4/input_example.txt"), 4512);
+fn d4_p1_example() {
+    assert_eq!(d4_p1(&"./src/bin/d4/e.txt"), 4512);
 }
 
 #[test]
-fn day4_p1_test() {
+fn d4_p1_test() {
     assert_eq!(
-        day4_p1(&"./src/day4/input.txt"),
+        d4_p1(&"./src/bin/d4/i.txt"),
         dotenv::var("d4_p1").unwrap().parse::<i32>().unwrap()
     )
 }
 
 #[allow(dead_code)]
-pub fn day4_p2(source: &str) -> i32 {
+pub fn d4_p2(source: &str) -> i32 {
     let (game, mut boards) = parse_input(source);
     let bl = boards.len();
     let mut result = None;
@@ -132,14 +144,14 @@ pub fn day4_p2(source: &str) -> i32 {
 }
 
 #[test]
-fn day4_p2_example() {
-    assert_eq!(day4_p2(&"./src/day4/input_example.txt"), 1924);
+fn d4_p2_example() {
+    assert_eq!(d4_p2(&"./src/bin/d4/e.txt"), 1924);
 }
 
 #[test]
-fn day4_p2_test() {
+fn d4_p2_test() {
     assert_eq!(
-        day4_p2(&"./src/day4/input.txt"),
+        d4_p2(&"./src/bin/d4/i.txt"),
         dotenv::var("d4_p2").unwrap().parse::<i32>().unwrap()
     )
 }

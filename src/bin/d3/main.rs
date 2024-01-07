@@ -1,4 +1,16 @@
+extern crate aoc2021;
 use crate::utils::read_lines::read_lines;
+use aoc2021::utils;
+use std::env;
+
+fn main() {
+    let args: Vec<String> = env::args().collect();
+    let src = &args[1];
+    let one = d3_p1(src);
+    let two = d3_p2(src);
+    println!("{}", one);
+    println!("{}", two);
+}
 
 fn parse_input(source: &str) -> Vec<String> {
     let mut output: Vec<String> = Vec::new();
@@ -54,11 +66,8 @@ fn binary_to_decimal(bin: &String) -> isize {
 }
 
 #[allow(dead_code)]
-pub fn day3_p1(source: &str) -> isize {
+pub fn d3_p1(source: &str) -> isize {
     let output = parse_input(source);
-    // rust 101: str are generally immutable while String represents mutable strings
-    // in the output above it could make sense to have str but since we borrow
-    // values that way, lifetime of variables gets in the way
     let mut gamma_rating: String = "".to_string();
     let mut epsilon_rating: String = "".to_string();
 
@@ -78,21 +87,21 @@ pub fn day3_p1(source: &str) -> isize {
 }
 
 #[test]
-fn day3_p1_example() {
-    assert_eq!(day3_p1(&"./src/day3/input_example.txt"), 198);
+fn d3_p1_example() {
+    assert_eq!(d3_p1(&"./src/bin/d3/e.txt"), 198);
 }
 
 #[test]
-fn day3_p1_test() {
+fn d3_p1_test() {
     dotenv::dotenv().ok();
     assert_eq!(
-        day3_p1(&"./src/day3/input.txt"),
+        d3_p1(&"./src/bin/d3/i.txt"),
         dotenv::var("d3_p1").unwrap().parse::<isize>().unwrap()
     );
 }
 
 #[allow(dead_code)]
-pub fn day3_p2(source: &str) -> isize {
+pub fn d3_p2(source: &str) -> isize {
     let output = parse_input(source);
     let oxygen_generator_rating: String = find_rating(&output, 0, '1', '0');
     let co2_scrubber_rating: String = find_rating(&output, 0, '0', '1');
@@ -100,15 +109,15 @@ pub fn day3_p2(source: &str) -> isize {
 }
 
 #[test]
-fn day3_p2_example() {
-    assert_eq!(day3_p2(&"./src/day3/input_example.txt"), 230);
+fn d3_p2_example() {
+    assert_eq!(d3_p2(&"./src/bin/d3/e.txt"), 230);
 }
 
 #[test]
-fn day3_p2_test() {
+fn d3_p2_test() {
     dotenv::dotenv().ok();
     assert_eq!(
-        day3_p2(&"./src/day3/input.txt"),
+        d3_p2(&"./src/bin/d3/i.txt"),
         dotenv::var("d3_p2").unwrap().parse::<isize>().unwrap()
     );
 }

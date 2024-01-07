@@ -1,6 +1,18 @@
+extern crate aoc2021;
 use crate::utils::read_lines::read_lines;
+use aoc2021::utils;
 use colored::*;
-use std::{cmp::max, collections::HashMap};
+use std::{cmp::max, collections::HashMap, env};
+
+fn main() {
+    let args: Vec<String> = env::args().collect();
+    let src = &args[1];
+    let (one, two, _, _) = parse_input(src);
+    let o = one.iter().filter(|x| x.1 > &1).count();
+    let t = two.iter().filter(|x| x.1 > &1).count();
+    println!("{}", o);
+    println!("{}", t);
+}
 
 fn parse_input(source: &str) -> (HashMap<(i32, i32), i32>, HashMap<(i32, i32), i32>, i32, i32) {
     let mut non_diagonal = HashMap::new();
@@ -89,7 +101,7 @@ fn print_map(lines: &HashMap<(i32, i32), i32>, max_x: i32, max_y: i32) {
 }
 
 #[allow(dead_code)]
-pub fn day5_p1(source: &str) -> usize {
+pub fn d5_p1(source: &str) -> usize {
     let (one, _, max_x, max_y) = parse_input(source);
     let res = one.iter().filter(|x| x.1 > &1).count();
     print_map(&one, max_x, max_y);
@@ -97,35 +109,35 @@ pub fn day5_p1(source: &str) -> usize {
 }
 
 #[test]
-pub fn day5_ex_p1() {
-    assert_eq!(day5_p1(&"./src/day5/input_example.txt"), 5);
+pub fn d5_ex_p1() {
+    assert_eq!(d5_p1(&"./src/bin/d5/e.txt"), 5);
 }
 
 #[test]
-fn day5_test_p1() {
+fn d5_test_p1() {
     assert_eq!(
-        day5_p1(&"./src/day5/input.txt"),
+        d5_p1(&"./src/bin/d5/i.txt"),
         dotenv::var("d5_p1").unwrap().parse::<usize>().unwrap()
     )
 }
 
 #[allow(dead_code)]
-pub fn day5_p2(source: &str) -> usize {
-    let (_, two, max_x, max_y) = parse_input(source);
+pub fn d5_p2(source: &str) -> usize {
+    let (_, two, _, _) = parse_input(source);
     let res = two.iter().filter(|x| x.1 > &1).count();
-    print_map(&two, max_x, max_y);
+    //print_map(&two, max_x, max_y);
     res
 }
 
 #[test]
-pub fn day5_ex_p2() {
-    assert_eq!(day5_p2(&"./src/day5/input_example.txt"), 12);
+pub fn d5_ex_p2() {
+    assert_eq!(d5_p2(&"./src/bin/d5/e.txt"), 12);
 }
 
 #[test]
-fn day5_test_p2() {
+fn d5_test_p2() {
     assert_eq!(
-        day5_p2(&"./src/day5/input.txt"),
+        d5_p2(&"./src/bin/d5/i.txt"),
         dotenv::var("d5_p2").unwrap().parse::<usize>().unwrap()
     )
 }
