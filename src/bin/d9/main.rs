@@ -1,8 +1,6 @@
 extern crate aoc2021;
 use std::{collections::HashMap, env, i32};
 
-use colored::*;
-
 use crate::utils::read_lines::read_lines;
 use aoc2021::utils;
 
@@ -12,7 +10,7 @@ fn main() {
 
     let (p1, p2) = d9_p1(src);
 
-    println!("Day 8");
+    println!("Day 9");
     println!("Part 1 {}", p1);
     println!("Part 2 {}", p2);
 }

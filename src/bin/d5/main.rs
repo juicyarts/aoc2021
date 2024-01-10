@@ -10,6 +10,8 @@ fn main() {
     let (one, two, _, _) = parse_input(src);
     let o = one.iter().filter(|x| x.1 > &1).count();
     let t = two.iter().filter(|x| x.1 > &1).count();
+
+    print!("Day 5");
     println!("{}", o);
     println!("{}", t);
 }

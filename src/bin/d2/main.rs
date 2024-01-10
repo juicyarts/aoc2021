@@ -8,6 +8,8 @@ fn main() {
     let src = &args[1];
     let one = d2_p1(src);
     let two = d2_p2(src);
+
+    println!("Day 2");
     println!("{}", one);
     println!("{}", two);
 }
