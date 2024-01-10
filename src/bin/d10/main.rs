@@ -15,35 +15,50 @@ fn main() {
     println!("Part 2 {}", p2);
 }
 
-fn d10_p1(source: &str) -> (i32, i32) {
+fn d10_p1(source: &str) -> (i32, i64) {
     let o = "([{<";
     let c_map = HashMap::from([("]", "["), (")", "("), ("}", "{"), (">", "<")]);
     let o_map = HashMap::from([("[", "]"), ("(", ")"), ("{", "}"), ("<", ">")]);
     let s_map = HashMap::from([("]", 57), (")", 3), ("}", 1197), (">", 25137)]);
+    let s2_map = HashMap::from([("[", 2), ("(", 1), ("{", 3), ("<", 4)]);
     let mut sum = 0;
+    let mut rest: Vec<String> = Vec::new();
+
     if let Ok(lines) = read_lines(source) {
         for line in lines.flatten() {
-            let mut l: String = "".to_string();
-            line.split("\n").for_each(|row| {
-                println!("Analyzing: {:?}", row);
+            'outer: for row in line.split("\n") {
+                let mut left: String = "".to_string();
                 for s in row.chars() {
                     let sf: &str = &s.to_string();
-
                     if o.contains(s) {
-                        l.push_str(&s.to_string());
+                        left.push_str(&s.to_string());
                     } else {
-                        let expected: &str = &l.chars().last().unwrap().to_string();
+                        let expected: &str = &left.chars().last().unwrap().to_string();
                         if c_map[sf] == expected {
-                            l.remove(l.len() - 1);
+                            left.remove(left.len() - 1);
                         } else {
                             sum += s_map[sf];
-                            break;
+                            break 'outer;
                         }
                     }
                 }
-            });
+                rest.push(left);
+            }
         }
     }
 
-    (sum, 0)
+    let mut points: Vec<i64> = Vec::new();
+    for l in rest {
+        let mut sum2: i64 = 0;
+        let mut right: String = "".to_string();
+        for c in l.chars().rev() {
+            let cs: &str = &c.to_string();
+            right.push_str(o_map[cs]);
+            sum2 = (sum2 * 5) + s2_map[&cs];
+        }
+        points.push(sum2);
+    }
+
+    points.sort();
+    (sum, points[points.len() / 2])
 }
