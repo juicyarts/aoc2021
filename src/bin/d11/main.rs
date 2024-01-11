@@ -23,14 +23,14 @@ fn main() {
     let s = &args[2];
     let steps = s.parse::<i32>().unwrap();
 
-    let (p1, p2) = d11_p1(src, steps);
+    let (p1, p2) = d11(src, steps);
 
     println!("Day 11");
     println!("Part 1 {}", p1);
     println!("Part 2 {}", p2);
 }
 
-fn d11_p1(source: &str, steps: i32) -> (usize, i64) {
+fn d11(source: &str, steps: i32) -> (usize, i64) {
     let mut l: Vec<Vec<i32>> = Vec::new();
     let mut rc = 0;
     let mut cc = 0;
@@ -56,21 +56,22 @@ fn d11_p1(source: &str, steps: i32) -> (usize, i64) {
 }
 
 fn sim(mut m: Vec<Vec<i32>>, steps: i32, r: i32, c: i32) -> usize {
-    (0..steps).fold(0, |acc, _| {
+    (0..steps).fold(0, |acc, s| {
         m.iter_mut()
             .for_each(|row| row.iter_mut().for_each(|cell| *cell += 1));
-        let ac = acc
-            + (0..r)
-                .flat_map(|y| (0..c).map(move |x| (x, y)))
-                .fold(0, |acc, (x, y)| {
-                    acc + (m[y as usize][x as usize] > 9)
-                        .then(|| flash(&mut m, (x as usize, y as usize)))
-                        .unwrap_or(0)
-                });
+        let ac = (0..r)
+            .flat_map(|y| (0..c).map(move |x| (x, y)))
+            .fold(0, |acc, (x, y)| {
+                acc + (m[y as usize][x as usize] > 9)
+                    .then(|| flash(&mut m, (x as usize, y as usize)))
+                    .unwrap_or(0)
+            });
 
-        print_map(&m);
+        if ac as i32 == r * c {
+            panic!("{}", s + 1);
+        }
 
-        ac
+        acc + ac
     })
 }
 
@@ -87,19 +88,4 @@ fn flash(map: &mut Vec<Vec<i32>>, p: (usize, usize)) -> usize {
                 _ => acc,
             }
         })
-}
-
-fn print_map(m: &Vec<Vec<i32>>) {
-    for row in m {
-        println!();
-        for col in row {
-            if *col == 0 {
-                print!("{}", 0.to_string().red());
-            } else {
-                print!("{}", col.to_string().blue());
-            }
-        }
-    }
-
-    println!()
 }
