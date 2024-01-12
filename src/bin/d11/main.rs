@@ -1,10 +1,8 @@
 extern crate aoc2021;
 use std::{env, i32};
 
-#[rustfmt::skip]
 use crate::utils::read_lines::read_lines;
 use aoc2021::utils;
-use colored::*;
 
 const DIRS: [(isize, isize); 8] = [
     (-1, -1),
