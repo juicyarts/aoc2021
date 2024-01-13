@@ -10,7 +10,7 @@ fn main() {
     let args: Vec<String> = env::args().collect();
     let src = &args[1];
 
-    let (p1, p2) = d13(src);
+    let (p1, _) = d13(src);
 
     println!("Day 13");
     println!("Part 1 {}", p1);
