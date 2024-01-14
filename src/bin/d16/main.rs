@@ -1,20 +1,9 @@
 extern crate aoc2021;
 
-use std::{collections::HashMap, env, str};
+use std::{collections::HashMap, env, isize, str};
 
 use crate::utils::read_lines::read_lines;
 use aoc2021::utils;
-
-#[derive(Debug)]
-struct Packet {
-    version: u32,
-    type_id: u32,
-    groups: Vec<String>,
-    value: isize,
-    ptype: String,
-    c_len: isize,
-    c_b_len: isize,
-}
 
 fn main() {
     let args: Vec<String> = env::args().collect();
@@ -47,23 +36,18 @@ fn d_16(source: &str) -> (u32, i32) {
     let mut byte_string = "".to_string();
 
     if let Ok(lines) = read_lines(source) {
-        let _ = lines
-            .flatten()
-            .map(|line| {
-                line.chars()
-                    .map(|c| {
-                        byte_string.push_str(byte_to_string_map[&c]);
-                        byte_to_string_map[&c]
-                    })
-                    .collect::<Vec<&str>>()
-            })
-            .collect::<Vec<Vec<&str>>>();
+        lines.flatten().for_each(|line| {
+            line.chars().for_each(|c| {
+                byte_string.push_str(byte_to_string_map[&c]);
+            });
+        });
     }
-    let v_cnt = make_packet(&byte_string);
+
+    let (v_cnt, _) = make_packet(&byte_string);
     (v_cnt, 0)
 }
 
-fn make_packet(input: &str) -> u32 {
+fn make_packet(input: &str) -> (u32, &str) {
     let string_to_byte_map: HashMap<&str, char> = HashMap::from([
         ("0000", '0'),
         ("0001", '1'),
@@ -84,54 +68,58 @@ fn make_packet(input: &str) -> u32 {
     ]);
 
     if input.len() < 11 {
-        return 0;
+        return (0, input);
     }
 
     let v: &str = &format!("{:0>4}", input.split_at(3).0).to_string();
     let version = string_to_byte_map[v].to_digit(10).unwrap();
     let t: &str = &format!("{:0>4}", input.split_at(3).1.split_at(3).0.to_string());
     let type_id = string_to_byte_map[t].to_digit(10).unwrap();
-    let rest = input.split_at(3).1.split_at(3).1;
+    let mut rest = input.split_at(6).1;
 
     let mut total_versions = version;
-    let packet: Packet;
 
-    println!("{}", input);
-
-    // println!("Paket {} {} start", version, type_id);
     if type_id != 4 {
-        let lt_id = rest.chars().nth(0).unwrap().to_string();
-        let mut c_b_len = 0;
-        let mut c_len = 0;
+        let lt_id = rest.split_at(1).0.parse::<i32>().unwrap();
+        rest = rest.split_at(1).1;
 
-        if lt_id == "1" {
-            let pkg_no = isize::from_str_radix(rest.split_at(1).1.split_at(11).0, 2).unwrap();
-            let vss: u32 = make_packet(rest.split_at(1).1.split_at(11).1);
+        if lt_id == 1 {
+            if rest.len() < 22 {
+                return (total_versions, rest);
+            }
 
-            c_len = pkg_no;
-            total_versions += vss;
+            let (start, end) = rest.split_at(11);
+            let pkg_no = isize::from_str_radix(start, 2).unwrap();
+            rest = end;
+            println!("11 BIT {} {} {} {}, ", version, type_id, pkg_no, start);
+
+            for _ in 0..pkg_no {
+                let (vss, r) = make_packet(rest);
+                total_versions += vss;
+                rest = r;
+            }
         } else {
-            let pkg_l = isize::from_str_radix(rest.split_at(1).1.split_at(15).0, 2).unwrap();
-            // println!("WW {} {} {} {} {} {} {}", rest, pkg_l, version, type_id, lt_id, rest.split_at(1).1.split_at(15).0,  rest.split_at(1).1.split_at(15).1.len());
+            if rest.len() < 26 {
+                return (total_versions, rest);
+            }
 
-            let m = rest.split_at(1).1.split_at(15).1;
+            let (start, end) = rest.split_at(15);
+            let pkg_l = isize::from_str_radix(start, 2).unwrap();
 
-            let mut vss: u32 = make_packet(m);
-            //if m.1 != "" {
-            //    vss += make_packet(rest.split_at(1).1.split_at(15).1.split_at(pkg_l as usize).1);
-            //}
+            if pkg_l > end.len() as isize {
+                return (total_versions, end);
+            }
 
-            c_b_len = pkg_l;
-            total_versions += vss;
-        }
-        packet = Packet {
-            version,
-            type_id,
-            groups: Vec::new(),
-            value: 0,
-            ptype: "Operator".to_string(),
-            c_b_len,
-            c_len,
+            println!("15 BIT {} {} {} {}, ", version, type_id, pkg_l, start);
+            let mut sub = end.split_at(pkg_l as usize).0;
+
+            while sub.is_empty() == false && sub.len() >= 11 {
+                let (vss, s) = make_packet(sub);
+                total_versions += vss;
+                sub = s;
+            }
+
+            rest = end.split_at(pkg_l as usize).1;
         }
     } else {
         let r = rest
@@ -141,49 +129,22 @@ fn make_packet(input: &str) -> u32 {
             .collect::<Result<Vec<&str>, _>>()
             .unwrap();
 
-        let mut rest_rest = "".to_string();
-
-        let (va, _, nr) = r.iter().fold(
-            ("".to_string(), 0, vec![]),
-            |mut acc: (String, i32, Vec<String>), s| {
-                if s.split_at(1).1.len() < 3 || acc.1 == 1 {
+        let (_, _) = r
+            .iter()
+            .fold(("".to_string(), 0), |mut acc: (String, i32), s| {
+                if acc.1 == 1 {
                     return acc;
                 }
 
-                acc.0.push_str(&s.split_at(1).1.chars().collect::<String>());
-                acc.2.push(s.split_at(1).1.chars().collect::<String>());
-
                 if s.split_at(1).0 == "0" {
-                    rest_rest = rest
-                        .split_once(&s.split_at(1).1.to_string())
-                        .unwrap()
-                        .1
-                        .to_string();
+                    rest = rest.split_once(&s.to_string()).unwrap().1;
                     acc.1 = 1;
                 }
+
+                acc.0.push_str(&s.split_at(1).1.chars().collect::<String>());
                 acc
-            },
-        );
-
-        let val = isize::from_str_radix(&va, 2).unwrap();
-
-        packet = Packet {
-            version,
-            type_id,
-            groups: nr.clone(),
-            value: val,
-            ptype: "Literal".to_string(),
-            c_len: nr.len() as isize,
-            c_b_len: 0,
-        };
-
-        if rest_rest.len() > 6 {
-            total_versions += make_packet(&rest_rest);
-        }
+            });
     }
 
-    println!("Created {:?}", packet);
-    // println!("Packet {} {} End", version, type_id);
-
-    total_versions
+    (total_versions, rest)
 }
