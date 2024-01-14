@@ -96,6 +96,9 @@ fn make_packet(input: &str) -> u32 {
     let mut total_versions = version;
     let packet: Packet;
 
+    println!("{}", input);
+
+    // println!("Paket {} {} start", version, type_id);
     if type_id != 4 {
         let lt_id = rest.chars().nth(0).unwrap().to_string();
         let mut c_b_len = 0;
@@ -109,10 +112,14 @@ fn make_packet(input: &str) -> u32 {
             total_versions += vss;
         } else {
             let pkg_l = isize::from_str_radix(rest.split_at(1).1.split_at(15).0, 2).unwrap();
+            // println!("WW {} {} {} {} {} {} {}", rest, pkg_l, version, type_id, lt_id, rest.split_at(1).1.split_at(15).0,  rest.split_at(1).1.split_at(15).1.len());
 
-            let mut vss: u32 =
-                make_packet(rest.split_at(1).1.split_at(15).1.split_at(pkg_l as usize).0);
-            vss += make_packet(rest.split_at(1).1.split_at(15).1.split_at(pkg_l as usize).1);
+            let m = rest.split_at(1).1.split_at(15).1;
+
+            let mut vss: u32 = make_packet(m);
+            //if m.1 != "" {
+            //    vss += make_packet(rest.split_at(1).1.split_at(15).1.split_at(pkg_l as usize).1);
+            //}
 
             c_b_len = pkg_l;
             total_versions += vss;
@@ -176,6 +183,7 @@ fn make_packet(input: &str) -> u32 {
     }
 
     println!("Created {:?}", packet);
+    // println!("Packet {} {} End", version, type_id);
 
     total_versions
 }
